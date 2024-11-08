@@ -20,6 +20,7 @@ class DataProcessor:
     '''
     Process the original data, isolating the numerical features.
     - The 'Id' feature is automatically dropped.
+    - NaN values imputed with 0
 
     Params:
         df: the dataframe containing the **original** data
@@ -31,6 +32,8 @@ class DataProcessor:
         num_df = df.select_dtypes(exclude='object')
         num_df.drop('Id', axis=1, inplace=True)
         num_df.drop(self.extracted_cat_features, axis=1, inplace=True)
+        num_df.fillna(0, inplace=True)
+
         return num_df
     
     '''
@@ -83,9 +86,6 @@ class DataProcessor:
         num_df = self.numerical_data(df) 
         cat_df = self.categorical_data(df)
         ord_df = self.ordinal_data(df)
-
-        # impute numerical NaN values with 0
-        num_df.fillna(0, inplace=True)
 
         # encode categorical features
         enc = OneHotEncoder(sparse_output=False)
