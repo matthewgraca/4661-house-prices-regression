@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import StandardScaler
+import numpy as np
 
 class DataProcessor:
     def __init__(self, df):
@@ -50,10 +52,6 @@ class DataProcessor:
     Process the original data, isolating the categorical features.
     - This removes the ordinal features by default 
 
-    Params:
-        drop_ordinal: Determines if the ordinal data should be dropped. 
-            True by default.
-
     Returns:
         A dataframe with only the categorical features
     '''
@@ -93,3 +91,22 @@ class DataProcessor:
 
         return pd.concat([num_df, cat_df, target_col], axis=1)
 
+    '''
+    Processes the original training data using Factor Analysis of Multiple Data.
+    - Uses complete_data() before transformed by FAMD.
+    - Numerical data is scaled, categorical is divided by modality.
+
+    Returns
+        The numerical dataframe and categorical dataframe transformed
+    '''
+    def famd_data(self):
+        # get numerical data
+        X_num = self.numerical_data()
+        
+        # divide each one hot encoded column by its modality
+        X_cat = self.categorical_data()
+        for col in X_cat.columns:
+            n = X_cat[col].sum()
+            X_cat[col] = X_cat[col].apply(lambda x: x / np.sqrt(n))
+
+        return X_num, X_cat
