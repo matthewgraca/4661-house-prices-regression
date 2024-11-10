@@ -37,8 +37,6 @@ class DataProcessor:
         num_df.drop('Id', axis=1, inplace=True)
         num_df.drop(self.extracted_cat_features, axis=1, inplace=True)
         num_df.fillna(0, inplace=True)
-        target = num_df['SalePrice']
-        num_df.drop('SalePrice', axis=1, inplace=True)
         
         # encode ordinal features
         ord_df = self.df[self.extracted_ord_features]
@@ -46,7 +44,13 @@ class DataProcessor:
         enc.set_output(transform='pandas')
         encoded_ord_df = enc.fit_transform(ord_df)
 
-        return pd.concat([num_df, encoded_ord_df, target], axis=1) 
+        # training set contains SalePrice; test set does not
+        if 'SalePrice' in num_df.columns:
+            target = num_df['SalePrice']
+            num_df.drop('SalePrice', axis=1, inplace=True)
+            return pd.concat([num_df, encoded_ord_df, target], axis=1) 
+        else:
+            return pd.concat([num_df, encoded_ord_df], axis=1) 
     
     '''
     Process the original data, isolating the categorical features.
@@ -86,10 +90,13 @@ class DataProcessor:
         cat_df = self.categorical_data()
 
         # merge all the dfs
-        target_col = num_df["SalePrice"]
-        num_df.drop("SalePrice", axis=1, inplace=True)
-
-        return pd.concat([num_df, cat_df, target_col], axis=1)
+        # training set has target column, test set does not.
+        if 'SalePrice' in num_df.columns:
+            target = num_df["SalePrice"]
+            num_df.drop("SalePrice", axis=1, inplace=True)
+            return pd.concat([num_df, cat_df, target], axis=1)
+        else:
+            return pd.concat([num_df, cat_df], axis=1)
 
     '''
     Processes the original training data using Factor Analysis of Multiple Data.
