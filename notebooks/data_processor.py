@@ -74,15 +74,16 @@ class DataProcessor:
     Returns:
         A dataframe with only the categorical features
     '''
-    def categorical_data(self):
+    def categorical_data(self, ohe=True):
         cat_df = self.df[self.categorical_cols].copy()
 
         # encode categorical features
-        enc = OneHotEncoder(sparse_output=False)
-        enc.set_output(transform='pandas')
-        encoded_cat_df = enc.fit_transform(cat_df)
+        if ohe:
+            enc = OneHotEncoder(sparse_output=False)
+            enc.set_output(transform='pandas')
+            cat_df = enc.fit_transform(cat_df)
 
-        return encoded_cat_df
+        return cat_df 
 
     '''
     Process the original training data, into one more usable by regression.
