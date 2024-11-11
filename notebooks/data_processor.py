@@ -8,17 +8,35 @@ class DataProcessor:
     def __init__(self, df):
         self.df = df
 
-        # categorical features that present as numerical
-        self.extracted_cat_features = [
-            'MSSubClass', 'YearBuilt', 'YearRemodAdd', 'BsmtFullBath', 
-            'BsmtHalfBath', 'GarageYrBlt', 'MoSold', 'YrSold'
+        # features we've identified to be:
+        # 1. numerical
+        self.numerical_cols = [
+            'Id', 'LotFrontage', 'LotArea', 'OverallQual', 
+            'OverallCond', 'MasVnrArea', 'BsmtFinSF1', 'BsmtFinSF2', 
+            'BsmtUnfSF', 'TotalBsmtSF', '1stFlrSF', '2ndFlrSF', 'LowQualFinSF', 
+            'GrLivArea', 'FullBath', 'HalfBath', 'BedroomAbvGr', 'KitchenAbvGr', 
+            'TotRmsAbvGrd', 'Fireplaces', 'GarageCars', 'GarageArea', 
+            'WoodDeckSF', 'OpenPorchSF', 'EnclosedPorch', '3SsnPorch', 
+            'ScreenPorch', 'PoolArea', 'MiscVal'
         ]
 
-        # ordinal features that present as categorical
-        self.extracted_ord_features = [
-            'LandSlope', 'BsmtQual', 'BsmtCond', 'BsmtFinType1', 'BsmtFinType2', 
-            'HeatingQC', 'Electrical', 'KitchenQual', 'Functional', 'FireplaceQu', 
+        # 2. ordinal
+        self.ordinal_cols = [
+            'LandSlope', 'BsmtQual', 'BsmtCond', 'BsmtFinType1', 'BsmtFinType2',
+            'HeatingQC', 'Electrical', 'KitchenQual', 'Functional', 'FireplaceQu',
             'GarageQual', 'GarageCond', 'PoolQC'
+        ]
+
+        # 3. categorical
+        self.categorical_cols = [
+            'MSZoning', 'Street', 'Alley', 'LotShape', 'LandContour', 'Utilities',
+            'LotConfig', 'Neighborhood', 'Condition1', 'Condition2', 'BldgType',
+            'HouseStyle', 'RoofStyle', 'RoofMatl', 'Exterior1st', 'Exterior2nd',
+            'MasVnrType', 'ExterQual', 'ExterCond', 'Foundation', 'BsmtExposure',
+            'Heating', 'CentralAir', 'GarageType', 'GarageFinish', 'PavedDrive',
+            'Fence', 'MiscFeature', 'SaleType', 'SaleCondition', 'MSSubClass',
+            'YearBuilt', 'YearRemodAdd', 'BsmtFullBath', 'BsmtHalfBath',
+            'GarageYrBlt', 'MoSold', 'YrSold'
         ]
 
     '''
@@ -33,22 +51,19 @@ class DataProcessor:
     '''
     def numerical_data(self):
         # set up numerical dataframe
-        num_df = self.df.select_dtypes(exclude='object')
+        num_df = self.df[self.numerical_cols].copy()
         num_df.drop('Id', axis=1, inplace=True)
-        num_df.drop(self.extracted_cat_features, axis=1, inplace=True)
         num_df.fillna(0, inplace=True)
         
         # encode ordinal features
-        ord_df = self.df[self.extracted_ord_features]
+        ord_df = self.df[self.ordinal_cols].copy()
         enc = OrdinalEncoder(encoded_missing_value=-1)
         enc.set_output(transform='pandas')
         encoded_ord_df = enc.fit_transform(ord_df)
 
         # training set contains SalePrice; test set does not
-        if 'SalePrice' in num_df.columns:
-            target = num_df['SalePrice']
-            num_df.drop('SalePrice', axis=1, inplace=True)
-            return pd.concat([num_df, encoded_ord_df, target], axis=1) 
+        if 'SalePrice' in self.df.columns:
+            return pd.concat([num_df, encoded_ord_df, self.df['SalePrice']], axis=1)
         else:
             return pd.concat([num_df, encoded_ord_df], axis=1) 
     
@@ -60,12 +75,7 @@ class DataProcessor:
         A dataframe with only the categorical features
     '''
     def categorical_data(self):
-        cat_df = self.df.select_dtypes(include='object')
-
-        # add categorical features that are not 'object' type
-        # drop features that are 'object', but will be converted to numeric
-        cat_df = pd.concat([cat_df, self.df[self.extracted_cat_features]], axis=1)
-        cat_df.drop(self.extracted_ord_features, axis=1, inplace=True)
+        cat_df = self.df[self.categorical_cols].copy()
 
         # encode categorical features
         enc = OneHotEncoder(sparse_output=False)
@@ -90,7 +100,7 @@ class DataProcessor:
         cat_df = self.categorical_data()
 
         # merge all the dfs
-        # training set has target column, test set does not.
+        # place target column at the end
         if 'SalePrice' in num_df.columns:
             target = num_df["SalePrice"]
             num_df.drop("SalePrice", axis=1, inplace=True)
