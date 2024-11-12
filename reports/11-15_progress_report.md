@@ -16,11 +16,11 @@ George Melendrez
 - Hyperparameter tuning
 
 Yash Harishkumar Patel
-- Basic model training
-- Model analysis, feature selection
+- Data visualization, correlation analysis
 
 Reda Masri
-- Data visualization, correlation analysis
+- Basic model training
+- Model analysis, feature selection
 
 # Information about the data
 Our data has 1460 samples containing 81 columns; that is, 80 features and one target column, 'SalePrice'. 
