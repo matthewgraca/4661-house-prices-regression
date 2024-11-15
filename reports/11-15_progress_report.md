@@ -1,5 +1,7 @@
 # Project title, description, and goals
-The project title is "House Prices Regression", where the goal is to predict the sale price of a house, given several features. The data can be found here: [House Prices - Advanced Regression Techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques). The goal is to minimize the root mean squared error of our chosen model with the use of various technqiues:
+- Github repo: https://github.com/matthewgraca/4661-house-prices-regression
+
+The project title is "House Prices Regression", where the goal is to predict the sale price of a house, given several features. The data can be found here: https://www.kaggle.com/c/house-prices-advanced-regression-techniques. The goal is to minimize the root mean squared error of our chosen model with the use of various technqiues:
 
 - Data visualiztion and feature selection.
 - Feature engineering with encoders, imputation.
