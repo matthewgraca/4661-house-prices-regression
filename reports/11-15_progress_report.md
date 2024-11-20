@@ -1,5 +1,8 @@
 # Project title, description, and goals
-The project title is "House Prices Regression", where the goal is to predict the sale price of a house, given several features. The data can be found here: [House Prices - Advanced Regression Techniques](https://www.kaggle.com/c/house-prices-advanced-regression-techniques). The goal is to minimize the root mean squared error of our chosen model with the use of various technqiues:
+- Github repo: https://github.com/matthewgraca/4661-house-prices-regression
+
+The project title is "House Prices Regression", where the goal is to predict the sale price of a house, given several features. The data can be found here: https://www.kaggle.com/c/house-prices-advanced-regression-techniques. The goal is to minimize the root mean squared error of our chosen model with the use of various technqiues:
+
 - Data visualiztion and feature selection.
 - Feature engineering with encoders, imputation.
 - Dimensionality reduction with PCA.
@@ -8,17 +11,21 @@ The project title is "House Prices Regression", where the goal is to predict the
 
 # Team member responsibilities
 Matthew Graca
+
 - Project lead
 - Feature engineering
 - Dimensionality reduction: PCA, FAMD
 
 George Melendrez
+
 - Hyperparameter tuning
 
 Yash Harishkumar Patel
+
 - Data visualization, correlation analysis
 
 Reda Masri
+
 - Basic model training
 - Model analysis, feature selection
 
@@ -37,6 +44,7 @@ We have done data visualization using pair plots to identify correlated features
 We have trained a basic model that will be used as the baseline for future improvements over the course of the project, as we finalize the kind of data that will be used.
 
 We have created mulitple datasets for testing:
+
 - Numerical dataset
 - Numerical dataset with one hot encoded categorical features
 - Dataset treated with FAMD

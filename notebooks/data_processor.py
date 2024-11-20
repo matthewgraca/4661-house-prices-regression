@@ -71,6 +71,9 @@ class DataProcessor:
     Process the original data, isolating the categorical features.
     - This removes the ordinal features by default 
 
+    Params:
+        ohe - one hot encodes the features if true, doesn't if otherwise
+
     Returns:
         A dataframe with only the categorical features
     '''
@@ -92,13 +95,16 @@ class DataProcessor:
     - All categorical features one-hot encoded.
     - Categorical features with natural ordering encoded with ordinal encoding.
 
+    Params:
+        ohe - one hot encodes the categorical features if true, doesn't if otherwise
+
     Returns
         A dataframe with the above operations performed, usuable for regression.
     '''
-    def complete_data(self):
+    def complete_data(self, ohe=True):
         # separate into numerical and categorical
         num_df = self.numerical_data() 
-        cat_df = self.categorical_data()
+        cat_df = self.categorical_data(ohe)
 
         # merge all the dfs
         # place target column at the end
